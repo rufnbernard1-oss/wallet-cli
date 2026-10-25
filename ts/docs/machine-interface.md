@@ -77,7 +77,7 @@ Schema id: `wallet-cli.result.v1`.
   "schema": "wallet-cli.result.v1",
   "success": true,
   "command": "account.balance",
-  "data": { "address": "TMSgJxtPw29AFEHMXsjGo4kWV7UwbCToHJ", "balance": "1976489000", "decimals": 6, "symbol": "TRX" },
+  "data": { "address": "TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76", "balance": "1976489000", "decimals": 6, "symbol": "TRX" },
   "meta": { "durationMs": 1114, "warnings": [] },
   "chain": { "family": "tron", "network": "tron:3448148188", "chainId": "3448148188" }
 }
@@ -228,7 +228,7 @@ Common codes at exit **2** (usage — fix the call):
 | `migration_required` | Persisted wallet data needs an upgrade this invocation cannot perform, because the master password was unavailable — re-run in a terminal, or pipe it with `--password-stdin`. See [startup wallet-data upgrades](#startup-wallet-data-upgrades) |
 | `seed_not_found` | `derive` was pointed at an account or id that is not an HD wallet — a private-key, Ledger or watch-only account |
 | `bai_credentials_missing` | No B.AI API key is configured. Set it with `config baiApiKey --api-key-stdin` |
-| `ambiguous_account` | `--account <address>` matches more than one account and they are not interchangeable signers for the family being acted on; `error.details` carries the candidates — see [`error.details.matches`](#errordetailsmatches) |
+| `ambiguous_account` | `-TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76- matches more than one account and they are not interchangeable signers for the family being acted on; `error.details` carries the candidates — see [`error.details.matches`](#errordetailsmatches) |
 
 Common codes at exit **1** (execution — runtime failure):
 
@@ -320,10 +320,10 @@ Some failures are a **choice**, not a dead end: the call was well formed but nam
 {"code":"ambiguous_asset_name","message":"2 TRC10 tokens are named MyToken; re-run with the id","details":{"name":"MyToken","assetIds":["1000123","1000488"],"matches":[{"assetId":"1000123","issuerAddress":"TQkXm4vN...","totalSupply":"1000000000000000","precision":6},{"assetId":"1000488","issuerAddress":"TZx9kP2m...","totalSupply":"5000000000","precision":2}]}}
 ```
 
-`ambiguous_account` is the second citizen of this convention, and the more commonly hit one — any `--account <address>` that does not resolve to a single interchangeable signer for the family being acted on returns it:
+`ambiguous_account` is the second citizen of this convention, and the more commonly hit one — any `--TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76` that does not resolve to a single interchangeable signer for the family being acted on returns it:
 
 ```json
-{"code":"ambiguous_account","message":"address T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb matches 2 accounts; address it by accountId","details":{"address":"T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb","accountIds":["wlt_a1b2c.0","wlt_d3e4f.0"],"matches":[{"accountId":"wlt_a1b2c.0","label":"main","type":"seed","index":0},{"accountId":"wlt_d3e4f.0","label":"cold","type":"watch","index":null}]}}
+{"code":"ambiguous_account","message":"address TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76 matches 2 accounts; address it by accountId","details":{"address":"TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76","accountIds":["wlt_a1b2c.0","wlt_d3e4f.0"],"matches":[{"accountId":"wlt_a1b2c.0","label":"main","type":"seed","index":0},{"accountId":"wlt_d3e4f.0","label":"cold","type":"watch","index":null}]}}
 ```
 
 `matches` is the convention, not a per-code special case: **any** error may carry it, and any that does gets the same treatment. In text mode the candidates are printed as a table under the `error [...]` line, on stderr. Quantities inside `matches` stay raw (minimal units), matching how the corresponding success payload reports them; the text table scales them for display when the row carries a `precision`.
@@ -342,7 +342,7 @@ A shell variable in an example is only a shell-side source for a pipe; wallet-cl
 ```bash
 # non-interactive unlock
 printf '%s' "$MASTER_PASSWORD_FROM_YOUR_VAULT" | wallet-cli tx send \
-  --to TSx72ViULFepRGCS4PM5dP4FqD1d8qggCc --amount 1 \
+  --to TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76 --amount 1 \
   --network tron:3448148188 --password-stdin -o json
 ```
 
@@ -388,7 +388,7 @@ set -euo pipefail
 deadline=$((SECONDS + 90))
 txid=$(
   printf '%s' "$PW" |
-    wallet-cli tx send --to T... --amount 1 --network tron:3448148188 --password-stdin -o json |
+    wallet-cli tx send --to TSRDBeQLvdWz7TgaUCkW5bJntgWZ8WAp76 --amount 1000 --network tron:3448148188 --password-stdin -o json |
     jq -er '.data.txId'
 )
 
